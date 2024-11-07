@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ToDoListMAUI.ViewModel"
+             xmlns:model="clr-namespace:ToDoListMAUI.Model"
+             x:DataType="vm:MainViewModel"
+             x:Class="ToDoListMAUI.MainPage">
+
+    <ScrollView HorizontalOptions="Center">
+        <VerticalStackLayout
+            Margin="0, 40, 0, 0"
+            Padding="20"
+            Spacing="25"
+            HorizontalOptions="Center">
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <Entry Text="{Binding Title}" WidthRequest="320"/>
+                <ImageButton Source="plus.png" Command="{Binding AddCommand}"/>
+            </HorizontalStackLayout>
+            
+            <CollectionView ItemsSource="{Binding tasks}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="12"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:ToDoTask">
+                        <HorizontalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
+                            <ImageButton
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=CompleteCommand}" 
+                                CommandParameter="{Binding .}"
+                                WidthRequest="12"
+                                HeightRequest="12">
+                                <ImageButton.Triggers>
+                                    <DataTrigger
+                                        TargetType="ImageButton"
+                                        Binding="{Binding IsDone}"
+                                        Value="True">
+                                        <Setter Property="Source" Value="complete.png"/>
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        TargetType="ImageButton"
+                                        Binding="{Binding IsDone}"
+                                        Value="False">
+                                        <Setter Property="Source" Value="square.png"/>
+                                    </DataTrigger>
+                                </ImageButton.Triggers>
+                            </ImageButton>
+
+                            <Label 
+                                Text="{Binding Title}" 
+                                WidthRequest="250"
+                                VerticalTextAlignment="Center" 
+                                HorizontalTextAlignment="Center"
+                                FontSize="16">
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        TargetType="Label"
+                                        Binding="{Binding IsDone}"
+                                        Value="True">
+                                        <Setter Property="TextDecorations" Value="Strikethrough"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <ImageButton 
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=DeleteCommand}" 
+                                CommandParameter="{Binding .}"
+                                Source="delete.png"
+                                WidthRequest="42" 
+                                HeightRequest="42"/>
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
