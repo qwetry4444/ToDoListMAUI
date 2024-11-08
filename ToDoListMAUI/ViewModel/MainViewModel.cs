@@ -17,9 +17,9 @@ namespace ToDoListMAUI.ViewModel
 
         public ObservableCollection<ToDoTask> tasks { get; set; }
 
-        public ICommand AddCommand { get; private set; }
-        public ICommand DeleteCommand { get; private set; }
-        public ICommand CompleteCommand { get; private set; }  
+        public Command AddCommand { get; private set; }
+        public Command DeleteCommand { get; private set; }
+        public Command CompleteCommand { get; private set; }  
 
 
         string _title = string.Empty;
@@ -32,14 +32,10 @@ namespace ToDoListMAUI.ViewModel
                 {
                     _title = value;
                     OnPropertyChanged();
-                    ((Command)AddCommand).ChangeCanExecute();
+                    (AddCommand).ChangeCanExecute();
                 }
             }
         }
-
-  
-       
-
 
         public MainViewModel() 
         {
@@ -56,24 +52,18 @@ namespace ToDoListMAUI.ViewModel
                     return !string.IsNullOrEmpty(Title);
                 }
             );
-
-            DeleteCommand = new Command(
+            
+            DeleteCommand = new Command<ToDoTask>(
                 execute: (task) =>
                 {
-                    if (task is ToDoTask)
-                    {
-                        tasks.Remove((ToDoTask)task);
-                    }
+                    tasks.Remove(task);
                 }
             );  
 
-            CompleteCommand = new Command(
+            CompleteCommand = new Command<ToDoTask>(
                 execute: (task) =>
                 {
-                    if (task is ToDoTask)
-                    {
-                        ((ToDoTask)task).IsDone = !((ToDoTask)task).IsDone;
-                    }
+                    (task).IsDone = !(task).IsDone;
                 }
             );
         }
